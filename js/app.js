@@ -290,10 +290,23 @@ function initMobileMenu() {
     toggle.setAttribute('aria-expanded', menu.classList.contains('open'));
   });
 
+  // Мобільне розкриття підменю послуг
+  const dropdownToggle = menu.querySelector('.dropdown-mobile-toggle');
+  const dropdownItem = menu.querySelector('.nav-item-dropdown');
+  if (dropdownToggle && dropdownItem) {
+    dropdownToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const isOpen = dropdownItem.classList.toggle('mobile-open');
+      dropdownToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+  }
+
   // Закриття при кліку на посилання
-  menu.querySelectorAll('.nav-link').forEach(link => {
+  menu.querySelectorAll('.nav-link:not(.nav-link-dropdown), .dropdown-item, .dropdown-all-btn').forEach(link => {
     link.addEventListener('click', () => {
       menu.classList.remove('open');
+      if (dropdownItem) dropdownItem.classList.remove('mobile-open');
     });
   });
 }
@@ -377,10 +390,6 @@ function initServiceFilters() {
         if (history.pushState) {
           history.pushState(null, '', `#${targetId}`);
         }
-        targetEl.classList.remove('highlight-target');
-        void targetEl.offsetWidth; // trigger reflow
-        targetEl.classList.add('highlight-target');
-        setTimeout(() => targetEl.classList.remove('highlight-target'), 2200);
       }
     });
   });
@@ -392,9 +401,7 @@ function initServiceFilters() {
     if (targetBlock) {
       applyCategoryFilter('all');
       const positionTarget = () => {
-        targetBlock.classList.add('highlight-target');
         scrollToTargetWithOffset(targetBlock);
-        setTimeout(() => targetBlock.classList.remove('highlight-target'), 2500);
       };
       setTimeout(positionTarget, 150);
       window.addEventListener('load', positionTarget, { once: true });
@@ -422,7 +429,9 @@ function scrollToTargetWithOffset(element, customOffset = null) {
 }
 
 /** Компактні горизонтальні каталоги на головній сторінці з автопрокруткою */
+/** РљРѕРјРїР°РєС‚РЅС– РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅС– РєР°С‚Р°Р»РѕРіРё Р· РЅРµРїРµСЂРµСЂРІРЅРёРј С€РѕРІРєРѕРІРёРј СЂСѓС…РѕРј (Infinite Marquee Glide) */
 function initCardSliders() {
+  // РћР±СЂРѕР±РЅРёРєРё СЃС‚СЂС–Р»РѕРє СЂСѓС‡РЅРѕРіРѕ РіРѕСЂС‚Р°РЅРЅСЏ
   document.querySelectorAll('[data-slider-prev], [data-slider-next]').forEach(button => {
     button.addEventListener('click', () => {
       const targetId = button.dataset.sliderPrev || button.dataset.sliderNext;
@@ -435,61 +444,117 @@ function initCardSliders() {
     });
   });
 
-  // Автопрокрутка лише для слайдерів з явним атрибутом data-autoplay="true"
+  // РќРµРїРµСЂРµСЂРІРЅРёР№ РїР»Р°РІРЅРёР№ СЂСѓС… РґР»СЏ СЃР»Р°Р№РґРµСЂС–РІ Р· data-autoplay="true"
   const autoSliders = document.querySelectorAll('.card-slider[data-autoplay="true"]');
   autoSliders.forEach(slider => {
-    let intervalId = null;
+    let animId = null;
     let isPaused = false;
-    let isVisible = false;
+    let isVisible = true;
+    let pauseTimeout = null;
+    const speed = 0.65; // РЁРІРёРґРєС–СЃС‚СЊ: С€РѕРІРєРѕРІРёР№ РґРµР»С–РєР°С‚РЅРёР№ СЂСѓС… (~40px/СЃРµРє)
 
-    const startAutoScroll = () => {
-      if (intervalId) clearInterval(intervalId);
-      intervalId = setInterval(() => {
-        if (isPaused || !isVisible) return;
-        const maxScroll = slider.scrollWidth - slider.clientWidth - 10;
-        const step = slider.firstElementChild ? slider.firstElementChild.offsetWidth + 20 : 380;
-        
-        if (slider.scrollLeft >= maxScroll) {
-          slider.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          slider.scrollBy({ left: step, behavior: 'smooth' });
-        }
-      }, 5000);
+    // РљР»РѕРЅСѓС”РјРѕ РїРµСЂРІРёРЅРЅС– РєР°СЂС‚РєРё РґР»СЏ СЃС‚РІРѕСЂРµРЅРЅСЏ Р±РµР·РїРµСЂРµСЂРІРЅРѕРіРѕ Р±РµР·С€РѕРІРЅРѕРіРѕ С†РёРєР»Сѓ
+    const originalChildren = Array.from(slider.children);
+    if (originalChildren.length <= 1) return;
+
+    originalChildren.forEach(child => {
+      const clone = child.cloneNode(true);
+      clone.setAttribute('data-clone', 'true');
+      slider.appendChild(clone);
+    });
+
+    // Р РѕР·СЂР°С…СѓРЅРѕРє С‚РѕС‡РєРё Р±РµР·С€РѕРІРЅРѕРіРѕ Р·Р°С†РёРєР»РµРЅРЅСЏ (С€РёСЂРёРЅР° РѕСЂРёРіС–РЅР°Р»СЊРЅРѕРіРѕ РЅР°Р±РѕСЂСѓ)
+    const getHalfWidth = () => {
+      const originalCards = Array.from(slider.children).filter(c => !c.hasAttribute('data-clone') && c.offsetWidth > 0);
+      if (!originalCards.length) return slider.scrollWidth / 2;
+      const lastOrig = originalCards[originalCards.length - 1];
+      return (lastOrig.offsetLeft + lastOrig.offsetWidth + 20) - originalCards[0].offsetLeft;
     };
 
-    slider.addEventListener('mouseenter', () => { isPaused = true; });
-    slider.addEventListener('mouseleave', () => { isPaused = false; });
-    slider.addEventListener('touchstart', () => { isPaused = true; }, { passive: true });
-    slider.addEventListener('touchend', () => { 
-      setTimeout(() => { isPaused = false; }, 2500); 
+    let halfWidth = getHalfWidth();
+    window.addEventListener('resize', () => {
+      halfWidth = getHalfWidth();
+    });
+
+    // РћСЃРЅРѕРІРЅРёР№ С†РёРєР» РїР»Р°РІРЅРѕС— Р°РЅС–РјР°С†С–С— РЅР° requestAnimationFrame (60/120 FPS)
+    const tick = () => {
+      if (!isPaused && isVisible && !slider.classList.contains('is-dragging')) {
+        slider.scrollLeft += speed;
+
+        // РљРѕР»Рё РґС–Р№С€Р»Рё РґРѕ РєРѕРїС–С— вЂ” РјРёС‚С‚С”РІРѕ РїРѕРІРµСЂС‚Р°С”РјРѕ РЅР° РїРѕС‡Р°С‚РѕРє РѕСЂРёРіС–РЅР°Р»СЊРЅРѕРіРѕ РЅР°Р±РѕСЂСѓ
+        // РћСЃРєС–Р»СЊРєРё РєРѕРїС–С— С–РґРµРЅС‚РёС‡РЅС– РґРѕ РїС–РєСЃРµР»СЏ, РІС–Р·СѓР°Р»СЊРЅРѕ Р·СЃСѓРІ Р°Р±СЃРѕР»СЋС‚РЅРѕ РЅРµРІРёРґРёРјРёР№
+        if (slider.scrollLeft >= halfWidth) {
+          slider.scrollLeft -= halfWidth;
+        } else if (slider.scrollLeft <= 0) {
+          slider.scrollLeft += halfWidth;
+        }
+      }
+      animId = requestAnimationFrame(tick);
+    };
+
+    animId = requestAnimationFrame(tick);
+
+    // РџР°СѓР·Р° РїСЂРё РЅР°РІРµРґРµРЅРЅС– РєСѓСЂСЃРѕСЂСѓ РјРёС€С– Р±РµР·РїРѕСЃРµСЂРµРґРЅСЊРѕ РЅР° РєР°СЂС‚РєРё
+    slider.addEventListener('mouseenter', () => {
+      clearTimeout(pauseTimeout);
+      isPaused = true;
+    });
+
+    slider.addEventListener('mouseleave', () => {
+      clearTimeout(pauseTimeout);
+      pauseTimeout = setTimeout(() => {
+        isPaused = false;
+      }, 700);
+    });
+
+    // РџР°СѓР·Р° РїСЂРё РґРѕС‚РёРєСѓ РЅР° СЃРјР°СЂС‚С„РѕРЅР°С…
+    slider.addEventListener('touchstart', () => {
+      clearTimeout(pauseTimeout);
+      isPaused = true;
     }, { passive: true });
 
+    slider.addEventListener('touchend', () => {
+      clearTimeout(pauseTimeout);
+      pauseTimeout = setTimeout(() => {
+        isPaused = false;
+      }, 2500);
+    }, { passive: true });
+
+    // РџСЂРё РєР»С–РєСѓ РЅР° СЃС‚СЂС–Р»РєРё вЂ” РїР°СѓР·Р° РЅР° 3.5 СЃРµРєСѓРЅРґРё
+    const sliderId = slider.id;
+    if (sliderId) {
+      document.querySelectorAll(`[data-slider-prev="${sliderId}"], [data-slider-next="${sliderId}"]`).forEach(btn => {
+        btn.addEventListener('click', () => {
+          clearTimeout(pauseTimeout);
+          isPaused = true;
+          pauseTimeout = setTimeout(() => {
+            isPaused = false;
+          }, 3500);
+        });
+      });
+    }
+
+    // Р—СѓРїРёРЅСЏС”РјРѕ Р°РЅС–РјР°С†С–СЋ, РєРѕР»Рё Р±Р»РѕРє РїРѕР·Р° РµРєСЂР°РЅРѕРј (0% РЅР°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ CPU)
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           isVisible = entry.isIntersecting;
         });
-      }, { threshold: 0.2 });
+      }, { threshold: 0.05 });
       observer.observe(slider);
-    } else {
-      isVisible = true;
     }
-
-    startAutoScroll();
   });
 
   // Natural horizontal scroll: Shift + Wheel or trackpad deltaX
   document.querySelectorAll('.card-slider').forEach(slider => {
     slider.addEventListener('wheel', (e) => {
-      // If user holds Shift while scrolling wheel, scroll horizontally
       if (e.shiftKey) {
         e.preventDefault();
         slider.scrollBy({ left: e.deltaY * 1.5, behavior: 'auto' });
       }
-      // Standard vertical wheel is NOT intercepted, allowing fluid, natural vertical page scrolling!
     }, { passive: false });
 
-    // Drag-to-scroll for mouse users (grab & slide like touch)
+    // Drag-to-scroll РґР»СЏ РјРёС€РєРё
     let isDown = false;
     let startX = 0;
     let scrollLeft = 0;
@@ -525,7 +590,6 @@ function initCardSliders() {
       slider.scrollLeft = scrollLeft - walk;
     });
 
-    // Suppress click on child links/buttons if user was dragging
     slider.addEventListener('click', (e) => {
       if (isDragging) {
         e.preventDefault();
@@ -1041,10 +1105,6 @@ function initAnchorSmoothScroll() {
           if (history.pushState) {
             history.pushState(null, '', url.hash);
           }
-          targetEl.classList.remove('highlight-target');
-          void targetEl.offsetWidth;
-          targetEl.classList.add('highlight-target');
-          setTimeout(() => targetEl.classList.remove('highlight-target'), 2000);
         }
       }
     } catch (_) {}
@@ -1057,8 +1117,6 @@ function initAnchorSmoothScroll() {
     if (targetEl) {
       const scrollOnLoad = () => {
         scrollToTargetWithOffset(targetEl);
-        targetEl.classList.add('highlight-target');
-        setTimeout(() => targetEl.classList.remove('highlight-target'), 2000);
       };
       setTimeout(scrollOnLoad, 200);
       window.addEventListener('load', scrollOnLoad, { once: true });

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Головна -->
+  <url>
+    <loc>https://nemyo.com.ua/</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Послуги -->
+  <url>
+    <loc>https://nemyo.com.ua/services.html</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Якірні посилання на послуги (для розширеного індексування) -->
+  <url>
+    <loc>https://nemyo.com.ua/services.html#deratization</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://nemyo.com.ua/services.html#disinsection</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://nemyo.com.ua/services.html#disinfection</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://nemyo.com.ua/services.html#ozonation</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://nemyo.com.ua/services.html#water-disinfection</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://nemyo.com.ua/services.html#haccp-audit</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nemyo.com.ua/services.html#outdoor-treatment</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://nemyo.com.ua/services.html#storage-protection</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Товари -->
+  <url>
+    <loc>https://nemyo.com.ua/products.html</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Інструкції / Пам'ятка клієнту -->
+  <url>
+    <loc>https://nemyo.com.ua/instructions.html</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Контакти -->
+  <url>
+    <loc>https://nemyo.com.ua/contacts.html</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>

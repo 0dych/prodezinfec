@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Блокуємо адмін-панель від індексування
+Disallow: /admin/
+Disallow: /admin/api/
+
+# Блокуємо технічні файли
+Disallow: /*.php$
+Disallow: /*.json$
+
+# Дозволяємо всі статичні ресурси (CSS, JS, зображення)
+Allow: /css/
+Allow: /js/
+Allow: /img/
+
+# Карта сайту
+Sitemap: https://nemyo.com.ua/sitemap.xml
+
+# Рекомендована затримка між запитами (секунди)
+Crawl-delay: 5
