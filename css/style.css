@@ -4554,73 +4554,45 @@ button, input, select, textarea {
   align-items: center;
   justify-content: center;
   touch-action: manipulation;
-  will-change: left, transform;
-  animation: pestFlight 60s linear infinite;
+  will-change: transform;
+  animation: pestFlight 100s linear infinite;
 }
 
 @keyframes pestFlight {
-  0% {
-    left: 8px;
-    transform: scaleX(1);
-  }
-  48% {
-    left: calc(100% - 68px);
-    transform: scaleX(1);
-    animation-timing-function: steps(1, end);
-  }
-  50% {
-    left: calc(100% - 68px);
-    transform: scaleX(-1);
-  }
-  98% {
-    left: 8px;
-    transform: scaleX(-1);
-    animation-timing-function: steps(1, end);
-  }
-  100% {
-    left: 8px;
-    transform: scaleX(1);
-  }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(var(--flight-distance, 240px), 0, 0); }
 }
 
 .fly-svg {
   width: 34px;
   height: 22px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7));
-  animation: flyHover 0.22s ease-in-out infinite alternate;
+  animation: none;
   will-change: transform;
 }
 
-@keyframes flyHover {
-  0% {
-    transform: translateY(-2px) rotate(-1.5deg);
-  }
-  100% {
-    transform: translateY(2px) rotate(1.5deg);
-  }
-}
 
-/* Fast Wing Flutter (Realistic buzzing insect wings) */
+/* Subtle wing movement without body shake or opacity flicker. */
 .fly-wing-left {
   transform-box: fill-box;
   transform-origin: 90% 50%;
-  animation: flyWingA 0.07s infinite alternate ease-in-out;
+  animation: flyWingA 0.45s infinite alternate ease-in-out;
 }
 
 .fly-wing-right {
   transform-box: fill-box;
   transform-origin: 90% 50%;
-  animation: flyWingB 0.07s infinite alternate ease-in-out;
+  animation: flyWingB 0.45s infinite alternate ease-in-out;
 }
 
 @keyframes flyWingA {
-  0% { transform: rotate(-14deg) scaleY(0.85); opacity: 0.9; }
-  100% { transform: rotate(14deg) scaleY(1.15); opacity: 0.5; }
+  0% { transform: rotate(-4deg); }
+  100% { transform: rotate(4deg); }
 }
 
 @keyframes flyWingB {
-  0% { transform: rotate(14deg) scaleY(0.85); opacity: 0.9; }
-  100% { transform: rotate(-14deg) scaleY(1.15); opacity: 0.5; }
+  0% { transform: rotate(4deg); }
+  100% { transform: rotate(-4deg); }
 }
 
 /* Compact Reticle on Hover */
@@ -6098,7 +6070,7 @@ button, input, select, textarea {
 
 .pest-target.is-zapped { animation-play-state: paused; }
 @media (max-width: 768px) {
-  .pest-target { animation-duration: 24s; }
+  .pest-target { animation-duration: 40s; }
 }
 @media (max-width: 640px) {
   .pest-floating-dialog {

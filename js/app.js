@@ -901,6 +901,14 @@ function initPestBarrier() {
 
   if (!barrier || !target) return;
 
+  const flightArea = target.parentElement;
+  const updateFlightDistance = () => {
+    target.style.setProperty('--flight-distance', `${Math.max(0, flightArea.clientWidth - 80)}px`);
+  };
+  updateFlightDistance();
+  if ('ResizeObserver' in window) new ResizeObserver(updateFlightDistance).observe(flightArea);
+  else window.addEventListener('resize', updateFlightDistance);
+
   // Keep the fixed dialog above section stacking contexts.
   if (banner) document.body.appendChild(banner);
 
