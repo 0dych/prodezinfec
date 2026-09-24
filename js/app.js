@@ -56,7 +56,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   initCertificatesModal();
   initWorksSlider();
   initScrollToTop();
-  initPestBarrier();
   initContactPageFeatures();
   initAnchorSmoothScroll();
 });
@@ -888,78 +887,7 @@ function initScrollToTop() {
   });
 }
 
-/**
- * Інтерактивний санітарний бар'єр захисту від шкідників (Мікро-гра з мухою)
- */
-function initPestBarrier() {
-  const barrier = document.getElementById('pestBarrier');
-  const target = document.getElementById('pestTarget');
-  const banner = document.getElementById('pestBanner');
-  const counterEl = document.getElementById('pestCounter');
-  const respawnBtn = document.getElementById('btnRespawnBug');
-  const closeBtn = document.getElementById('btnClosePestBanner');
 
-  if (!barrier || !target) return;
-
-  const flightArea = target.parentElement;
-  const updateFlightDistance = () => {
-    target.style.setProperty('--flight-distance', `${Math.max(0, flightArea.clientWidth - 80)}px`);
-  };
-  updateFlightDistance();
-  if ('ResizeObserver' in window) new ResizeObserver(updateFlightDistance).observe(flightArea);
-  else window.addEventListener('resize', updateFlightDistance);
-
-  // Keep the fixed dialog above section stacking contexts.
-  if (banner) document.body.appendChild(banner);
-
-  let killedCount = 0;
-  let isZapped = false;
-  let respawnTimer = null;
-
-  const zapPest = () => {
-    if (isZapped) return;
-    isZapped = true;
-    killedCount++;
-
-    target.classList.add('is-zapped');
-    if (counterEl) counterEl.textContent = `Ліквідовано: ${killedCount}`;
-
-    if (banner) {
-      banner.style.display = 'flex';
-    }
-
-    // Auto respawn after 4.5 seconds
-    clearTimeout(respawnTimer);
-    respawnTimer = setTimeout(respawnPest, 4500);
-  };
-
-  const respawnPest = () => {
-    clearTimeout(respawnTimer);
-    isZapped = false;
-    target.classList.remove('is-zapped');
-    if (banner) {
-      banner.style.display = 'none';
-    }
-  };
-
-  target.addEventListener('click', zapPest);
-  target.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      zapPest();
-    }
-  });
-
-  if (respawnBtn) {
-    respawnBtn.addEventListener('click', respawnPest);
-  }
-
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      if (banner) banner.style.display = 'none';
-    });
-  }
-}
 
 /**
  * Модальне вікно лікаря-консультанта (кнопки [data-doctor-contact])

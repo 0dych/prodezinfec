@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="uk">
 
 <head>
@@ -277,70 +277,7 @@
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- Ultra-slim Sanitary Perimeter with Slow Fly (Easter Egg) -->
-  <div class="sanitary-perimeter-divider" id="pestBarrier" aria-label="Санітарний периметр захисту">
-    <div class="container" style="position: relative; height: 100%;">
-      <div class="perimeter-line"></div>
-      <!-- Crawling/Flying Slow Fly Target -->
-      <div class="pest-target" id="pestTarget" role="button" tabindex="0" title="Клікніть, щоб знешкодити шкідника!"
-        aria-label="Шкідник на периметрі">
-        <!-- Compact Reticle -->
-        <div class="pest-reticle" aria-hidden="true">
-          <span class="reticle-ring"></span>
-          <span class="reticle-line h"></span>
-          <span class="reticle-line v"></span>
-        </div>
-
-        <!-- Vector Fly SVG -->
-        <svg class="fly-svg" viewBox="0 0 36 24">
-          <!-- Translucent Wings with Slow Subtle Flutter -->
-          <path class="fly-wing-left" d="M14 11 C9 3, 2 5, 5 11 C7 13, 11 12, 14 11" fill="rgba(186, 230, 253, 0.7)"
-            stroke="#7DD3FC" stroke-width="0.8" />
-          <path class="fly-wing-right" d="M14 13 C9 21, 2 19, 5 13 C7 11, 11 12, 14 13" fill="rgba(186, 230, 253, 0.7)"
-            stroke="#7DD3FC" stroke-width="0.8" />
-          <!-- Legs -->
-          <g stroke="#334155" stroke-width="1.1" stroke-linecap="round" fill="none">
-            <path d="M17 9 L19 5 L22 4" />
-            <path d="M17 15 L19 19 L22 20" />
-            <path d="M13 8 L12 4 L9 3" />
-            <path d="M13 16 L12 20 L9 21" />
-            <path d="M9 9 L7 6 L4 6" />
-            <path d="M9 15 L7 18 L4 18" />
-          </g>
-          <!-- Abdomen -->
-          <ellipse cx="9" cy="12" rx="5" ry="3.6" fill="#1E293B" />
-          <!-- Thorax -->
-          <ellipse cx="16" cy="12" rx="3.5" ry="3" fill="#C8102E" />
-          <!-- Head -->
-          <circle cx="21" cy="12" r="2.8" fill="#0A2540" />
-          <!-- Eyes -->
-          <circle cx="21.8" cy="10.4" r="1.3" fill="#DC2626" />
-          <circle cx="21.8" cy="13.6" r="1.3" fill="#DC2626" />
-          <!-- Antennae -->
-          <path d="M22 11 L25 9 M22 13 L25 15" stroke="#DC2626" stroke-width="0.9" stroke-linecap="round" />
-        </svg>
-
-        <!-- Zap / Spark effect -->
-        <div class="pest-zap-flash" aria-hidden="true"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Floating Fixed Toast Notification (Zero Layout Shift - Does NOT Jerk Page) -->
-  <div class="pest-floating-dialog" id="pestBanner" style="display: none;" role="status">
-    <span class="pest-dialog-icon">🛡️</span>
-    <div class="pest-dialog-text">
-      <strong>Шкідника знешкоджено!</strong> Об'єкт під захистом <span style="color: #34D399; font-weight: 800;">ТОВ
-        «ПРОФДЕЗІНФЕКЦІЯ ЗАКАРПАТТЯ»</span>
-    </div>
-    <span class="pest-dialog-count" id="pestCounter">1</span>
-    <button type="button" class="pest-dialog-btn" id="btnRespawnBug">Ще одна 🪰</button>
-    <button type="button" class="pest-dialog-close" id="btnClosePestBanner" aria-label="Закрити">&times;</button>
-  </div>
-
-  <!-- Services Section -->
+  </section><!-- Services Section -->
   <section class="section-padding services-section-wrapper" id="services">
     <div class="services-top-line" aria-hidden="true"></div>
     <div class="container">
